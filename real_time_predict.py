@@ -1,11 +1,19 @@
 # real_time_predict.py
 
+import os
+import warnings
 import cv2
 import mediapipe as mp
 import numpy as np
 import pickle
 import tkinter as tk
 import time
+
+# Suppress warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
+# Set TensorFlow logging level to suppress warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # Load trained model
 with open("models/asl_model.pkl", "rb") as f:
@@ -47,7 +55,6 @@ def update_video():
     if current_time - last_detection_time >= DETECTION_INTERVAL:
         predicted_letter = predict_class(frame)
         if predicted_letter:
-            # Append the detected letter to the running text if a prediction is made
             detected_text += predicted_letter
             last_detection_time = current_time  # Reset the timer
             if len(detected_text) > 30:  # Limit length to keep it manageable on screen
